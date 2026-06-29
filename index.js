@@ -94,4 +94,65 @@ console.log("Estado del campo eliminado de PRAGMATA: ", pragmataActivo);
     console.log("conexion cerrada");
   }
 }
+
+const usuarios = db.collection("usuarios");
+// CREATE USUARIO
+// creo el objeto que se va a insertar como nuevo documento en la coleccion usuarios
+const nuevoUsuario = {
+  nombre: "Matias Martinez",
+  gamer_tag: "jejox",
+  email: "jejox@email.com",
+  fecha_registro: new Date(),
+  eliminado: false
+};
+
+await usuarios.insertOne(nuevoUsuario); // inserto el usuario en la coleccion usuarios
+console.log("usuario insertado correctamente");
+
+// READ USUARIO
+// busco usuarios activos
+const usuariosActivos = await usuarios.find({ eliminado: false }).toArray();
+
+console.log("usuarios activos:");
+usuariosActivos.forEach((usuario) => {
+  console.log("- " + usuario.nombre + " | gamer tag: " + usuario.gamer_tag);
+});
+
+// UPDATE USUARIO
+await usuarios.updateOne(
+  { gamer_tag: "jejox", eliminado: false },
+  {
+    $set: {
+      nombre: "Matias Martinez actualizado",
+      email: "jejox_actualizado@email.com"
+    }
+  }
+);
+
+console.log("usuario actualizado");
+
+// DELETE USUARIO
+// hago baja logica cambiando eliminado a true
+await usuarios.updateOne(
+  { gamer_tag: "jejox", eliminado: false },
+  {
+    $set: {
+      eliminado: true
+    }
+  }
+);
+
+console.log("baja del usuario realizada");
+
+// verifico que el usuario dado de baja ya no aparezca como activo
+const usuarioActivo = await usuarios.findOne({
+  gamer_tag: "jejox",
+  eliminado: false
+});
+
+console.log("Estado activo de jejox: ", usuarioActivo);
+
+// listo solamente los usuarios activos
+// const usuariosActivosFinal = await usuarios.find({ eliminado: false }).toArray();
+// console.log(usuariosActivosFinal.map(usuario => usuario.gamer_tag));
 main(); // ejecutar por separado para ir documentando el crud
