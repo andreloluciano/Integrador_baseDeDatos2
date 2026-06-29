@@ -20,3 +20,4 @@ async function conectarDB() {
 }
 
 module.exports = { conectarDB, client };
+

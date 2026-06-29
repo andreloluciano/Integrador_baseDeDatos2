@@ -15,7 +15,7 @@ async function main() {
     // busco la distribuidora del juego y su id para referencias
     const distribuidoraCapcom = await distribuidoras.findOne({ nombre: "CAPCOM" });
 
-    // valido que las referencias existan antes de crear el juego
+    // valido que las referencias existan 
     if (!categoriaAccion || !categoriaAventura || !distribuidoraCapcom) {
       console.log("no se encontraron las referencias necesarias");
       return;
@@ -47,13 +47,12 @@ await juegos.insertOne(nuevoJuego); // inserto el juego en la coleccion juegos
 console.log("juego insertado correctamente");
 
 // READ
-// busco solamente los juegos activos, respetando la baja logica
+// busco juegos activos
 const juegosActivos = await juegos.find({ eliminado: false }).toArray();
-
 console.log("juegos activos:");
 juegosActivos.forEach((juego) => {
   console.log("- " + juego.titulo + " | precio: " + juego.precio);
-});
+}); 
 
     // UPDATE
     await juegos.updateOne(
@@ -61,15 +60,13 @@ juegosActivos.forEach((juego) => {
   {
     $set: {
       precio: 40.00,
-      descripcion: "Juego actualizado desde node"
+      descripcion: "node Juego de accion y ciencia ficcion"
     }
   }
 );
-
-    console.log("juego actualizado");
+    console.log("juego actualizado"); 
 
     // DELETE (eliminado a TRUE)
-    
     await juegos.updateOne(
      { titulo: "PRAGMATA" },
       {
@@ -78,10 +75,8 @@ juegosActivos.forEach((juego) => {
         }
       }
     );
-
-    console.log("baja logica realizada");
-
-// verifico que el juego dado de baja ya no aparezca como activo
+    console.log("baja del juego realizada");
+// verifico que PRAGMATA esta dado de baja
 const pragmataActivo = await juegos.findOne({
   titulo: "PRAGMATA",
   eliminado: false
@@ -90,7 +85,7 @@ console.log("Estado del campo eliminado de PRAGMATA: ", pragmataActivo);
 
 // listo solamente los juegos activos
 // const juegosActivos = await juegos.find({ eliminado: false }).toArray();
-// console.log(juegosActivos.map(juego => juego.titulo));
+// console.log(juegosActivos.map(juego => juego.titulo)); */
 
   } catch (error) {
     console.log("error en la ejecucion", error.message);
